@@ -119,6 +119,24 @@ h2:first-child {
     box-shadow: 0 0 30px rgba(0, 0, 0, 0.8), 0 0 15px rgba(255, 42, 95, 0.3);
 }
 
+/* テトリス盤面の奥にヴェル13世の透かし画像 */
+.center-panel::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 70%;
+    height: 70%;
+    background-image: url('character.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    opacity: 0.08; /* うっすらと透かす */
+    z-index: 1;
+    pointer-events: none; /* クリックを貫通させる */
+}
+
 canvas {
     display: block;
 }
