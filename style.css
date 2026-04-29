@@ -299,8 +299,9 @@ button:active {
         grid-area: left;
         display: flex;
         flex-direction: row;
-        justify-content: space-around;
+        justify-content: center; /* 中央に寄せる */
         align-items: stretch;
+        gap: 2px; /* 隙間をピタッと最小限（2px）にする。元の30pxを上書き */
     }
     
     /* ヴェル13世パネル */
@@ -370,7 +371,7 @@ button:active {
     }
     
     #game-character {
-        width: 125px; /* キャラクターを1.5倍に調整しつつ、プレイ画面のスペースを確保 */
+        width: 135px; /* キャラクターを1.5倍の大きさにしっかり拡大 */
     }
     
     /* 中央下：ゲーム画面（自動で縮小される） */
