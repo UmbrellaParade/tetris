@@ -392,7 +392,9 @@ button:active {
     }
     
     #game-character {
-        width: 175px; /* あと少しだけ大きく */
+        width: 175px; /* キャラクターの横幅を固定 */
+        max-height: 120px; /* 縦幅も固定してレイアウトが崩れないように */
+        object-fit: contain; /* 縦横比を保ちながら収める */
     }
     
     /* 中央下：ゲーム画面（自動で縮小される） */
