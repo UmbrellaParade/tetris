@@ -361,7 +361,7 @@ button:active {
     /* キャラクターコンテナ */
     .character-container {
         width: 100%;
-        margin-top: 0;
+        margin-top: 20px; /* キャラクター全体を少し下に下げる */
         display: flex;
         flex-direction: column;
         align-items: center;
