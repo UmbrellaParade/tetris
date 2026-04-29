@@ -1,0 +1,450 @@
+:root {
+    --bg-color: #050505;
+    --panel-bg: rgba(10, 10, 15, 0.65);
+    --text-color: #f8fafc;
+    --accent-color: #ff2a5f; /* ネオンピンク/赤 */
+    --border-color: rgba(255, 42, 95, 0.3);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: 'Outfit', sans-serif;
+    min-height: 100vh;
+    /* 背景画像を設定（ファイル名がbg.jpgの場合） */
+    background-image: url('bg.jpg');
+    background-size: cover;
+    background-position: center;
+    overflow-y: auto; /* 常にスクロールを許可 */
+}
+
+.app-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    padding: 20px 0;
+}
+
+/* 背景画像を少し暗くしてゲームを見やすくする */
+body::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.3);
+    z-index: -1;
+}
+
+.game-container {
+    display: flex;
+    gap: 30px;
+    padding: 30px;
+    background: rgba(10, 10, 15, 0.4);
+    backdrop-filter: blur(8px); /* 背景のキャラクターが見えるようにぼかしを弱く */
+    border-radius: 24px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 0 40px rgba(255, 42, 95, 0.2);
+}
+
+.panel {
+    background: var(--panel-bg);
+    border-radius: 16px;
+    padding: 24px;
+    width: 160px;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--border-color);
+    box-shadow: inset 0 0 20px rgba(255, 42, 95, 0.1);
+}
+
+.left-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.left-panel, .character-panel, .stats-panel {
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.char-name {
+    font-size: 0.9rem;
+    color: var(--accent-color);
+    letter-spacing: 1px;
+    margin-bottom: 5px;
+    text-shadow: 0 0 10px rgba(255, 42, 95, 0.5);
+    white-space: nowrap;
+}
+
+.right-panel {
+    align-items: center;
+    justify-content: flex-start;
+}
+
+h2 {
+    font-size: 1rem;
+    color: #cbd5e1;
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+    margin-top: 20px;
+}
+
+h2:first-child {
+    margin-top: 0;
+}
+
+.value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--accent-color);
+    text-shadow: 0 0 15px rgba(255, 42, 95, 0.8);
+}
+
+.center-panel {
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    background: rgba(0, 0, 0, 0.4); /* 盤面を半透明にして背景を透かせる */
+    border: 2px solid rgba(255, 42, 95, 0.4);
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.8), 0 0 15px rgba(255, 42, 95, 0.3);
+}
+
+canvas {
+    display: block;
+}
+
+#next-piece {
+    background: transparent;
+    margin-top: 10px;
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(10, 10, 15, 0.85);
+    backdrop-filter: blur(5px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+    z-index: 10;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.overlay h1 {
+    font-size: 2rem; /* 2.5remから小さくして1行に収める */
+    margin-bottom: 30px;
+    color: #fff;
+    text-shadow: 0 0 15px #ff2a5f, 0 0 30px #ff2a5f;
+    letter-spacing: 2px;
+}
+
+.overlay p {
+    margin-bottom: 30px;
+    line-height: 1.8;
+    color: #e2e8f0;
+    font-size: 0.9rem;
+}
+
+button {
+    background: linear-gradient(135deg, #ff2a5f 0%, #ff8c00 100%);
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: 'Outfit', sans-serif;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(255, 42, 95, 0.4);
+}
+
+button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 42, 95, 0.6);
+}
+
+button:active {
+    transform: translateY(1px);
+}
+
+/* キャラクターと吹き出しのスタイル */
+.character-container {
+    position: relative;
+    margin-top: 140px; /* さらに位置を下に移動 */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#game-character {
+    width: 260px; /* 220pxからさらに大きく変更 */
+    height: auto;
+    filter: drop-shadow(0 0 15px rgba(255, 42, 95, 0.6));
+    animation: float 3s ease-in-out infinite;
+}
+
+
+@keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0px); }
+}
+
+.speech-bubble {
+    position: relative;
+    background: rgba(255, 255, 255, 0.95);
+    color: #1a1a24;
+    padding: 12px 18px;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: bold;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    min-width: 120px;
+    margin-bottom: 15px;
+    transition: opacity 0.3s;
+    z-index: 100;
+}
+
+/* 吹き出しの尻尾 */
+.speech-bubble::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 8px;
+    border-style: solid;
+    border-color: rgba(255, 255, 255, 0.95) transparent transparent transparent;
+}
+
+.speech-bubble.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* PCではスマホ用コントローラーを非表示 */
+.mobile-controls {
+    display: none;
+}
+
+/* スマホ対応（画面幅が800px以下の場合） */
+@media (max-width: 800px) {
+    body {
+        align-items: center;
+        padding: 0;
+        overflow: hidden; /* スクロールを禁止し、1画面に固定 */
+        overscroll-behavior: none;
+        height: 100dvh; /* スマホのURLバーを考慮した正確な高さ */
+        width: 100vw;
+        position: fixed; /* iPhone等での画面全体の揺れや横移動を完全に防止 */
+    }
+    
+    .app-wrapper {
+        height: 100dvh;
+        max-height: 100dvh;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 5px;
+        box-sizing: border-box;
+        width: 100vw;
+        max-width: 100vw; /* 確実に画面幅に収める */
+        overflow: hidden; /* はみ出しをカットして横揺れを防ぐ */
+    }
+    
+    .game-container {
+        display: grid;
+        grid-template-columns: 2.8fr 1fr; /* NEXTを狭く、キャラ＆ステータスを非常に広く */
+        grid-template-rows: auto 1fr; 
+        grid-template-areas: 
+            "left right"
+            "center center";
+        gap: 5px;
+        padding: 0;
+        width: 100%;
+        flex: 1; 
+        min-height: 0; 
+    }
+    
+    .panel {
+        padding: 5px;
+        border-radius: 10px;
+    }
+    
+    /* 左側ラッパー（キャラとステータスを横並び） */
+    .left-wrapper {
+        grid-area: left;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+        align-items: stretch;
+    }
+    
+    /* ヴェル13世パネル */
+    .character-panel {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-end; /* LEVELの高さに合わせるため一番下に配置 */
+        width: 55%; /* スペースをより多く取る */
+        padding-bottom: 5px;
+    }
+    
+    /* ステータスパネル */
+    .stats-panel {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        width: 45%;
+    }
+    
+    /* 右上：NEXT */
+    .right-panel {
+        grid-area: right;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+    }
+    
+    .char-name {
+        font-size: 0.65rem;
+        margin-bottom: 2px;
+        text-align: center;
+    }
+    
+    .stat-box { margin: 2px; text-align: center; }
+    h2 { font-size: 0.6rem; margin: 0 0 2px 0; letter-spacing: 0; }
+    .value { font-size: 1rem; margin-bottom: 2px; }
+    
+    /* 吹き出しのスペース確保 */
+    .bubble-space {
+        width: 100%;
+        height: 35px; /* 吹き出し用のスペースを確保してレイアウトのブレを防ぐ */
+        display: flex;
+        justify-content: center;
+        align-items: flex-end;
+    }
+
+    /* 吹き出しの設定 */
+    .character-panel .speech-bubble {
+        font-size: 0.65rem;
+        min-width: 60px;
+        padding: 4px 6px;
+        margin-bottom: 4px;
+        white-space: pre-wrap; /* 改行を許容 */
+        line-height: 1.2;
+    }
+    
+    /* キャラクターコンテナ */
+    .character-container {
+        width: 100%;
+        margin-top: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    #game-character {
+        width: 85px; /* キャラクターをさらに大きく */
+    }
+    
+    /* 中央下：ゲーム画面（自動で縮小される） */
+    .center-panel {
+        grid-area: center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        height: 100%;
+        min-height: 0;
+        border: none;
+        box-shadow: none;
+        background: transparent;
+    }
+    
+    #game-board {
+        height: 100%; /* 親の高さに合わせる */
+        max-height: 100%;
+        width: auto; /* 高さに合わせて横幅を自動縮小 */
+        object-fit: contain;
+        border: 2px solid rgba(255, 42, 95, 0.4);
+        border-radius: 8px;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.8);
+    }
+    
+    #next-piece {
+        width: 50px;
+        height: 50px;
+    }
+    
+    /* スタート・ゲームオーバー画面の文字サイズ縮小 */
+    .overlay h1 { font-size: 1.5rem; margin-bottom: 15px; }
+    .overlay p { font-size: 0.7rem; margin-bottom: 15px; }
+    button { padding: 8px 15px; font-size: 0.9rem; }
+
+    /* 下部：コントローラー */
+    .mobile-controls {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 8px;
+        padding: 5px;
+        padding-bottom: 25px; /* iPhoneの下線（ホームバー）と被らないように余白を追加 */
+        margin-bottom: 0;
+        width: 100%;
+        flex-shrink: 0; /* 画面が狭くてもボタンが潰れないようにする */
+    }
+    
+    .control-btn {
+        background: rgba(10, 10, 15, 0.9);
+        border: 2px solid var(--accent-color);
+        color: white;
+        font-size: 1.2rem; /* ボタンの文字を少し小さく */
+        width: 50px; /* ボタンサイズを少し小さくして確実に収める */
+        height: 50px;
+        border-radius: 12px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        touch-action: manipulation;
+        user-select: none;
+    }
+    
+    .drop-btn {
+        background: rgba(255, 140, 0, 0.9);
+        border-color: #ff8c00;
+        width: 80px;
+    }
+    
+    .control-btn:active {
+        transform: scale(0.9);
+        background: var(--accent-color);
+    }
+    
+    .drop-btn:active {
+        background: #ff8c00;
+    }
+}

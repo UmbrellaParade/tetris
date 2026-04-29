@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>地獄のテトリス</title>
+    <link rel="stylesheet" href="style.css?v=9">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-wrapper">
+        <div class="game-container">
+        <!-- 左側のグループ -->
+        <div class="left-wrapper">
+            <!-- キャラクターのパネル -->
+            <div class="character-panel panel">
+                <div class="bubble-space">
+                    <div id="speech-bubble" class="speech-bubble hidden"></div>
+                </div>
+                <div class="character-container">
+                    <h2 class="char-name">ヴェル13世</h2>
+                    <img src="character.png" alt="Character" id="game-character">
+                </div>
+            </div>
+
+            <!-- ステータスのパネル -->
+            <div class="stats-panel panel">
+                <div class="stat-box">
+                    <h2>SCORE</h2>
+                    <div id="score" class="value">0</div>
+                </div>
+                <div class="stat-box">
+                    <h2>LINES</h2>
+                    <div id="lines" class="value">0</div>
+                </div>
+                <div class="stat-box">
+                    <h2>LEVEL</h2>
+                    <div id="level" class="value">1</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="center-panel">
+            <canvas id="game-board" width="300" height="600"></canvas>
+            <div id="start-screen" class="overlay">
+                <h1>地獄のテトリス</h1>
+                <button id="start-btn">START GAME</button>
+                <p>操作方法:<br>← → : 左右移動<br>↑ : 回転<br>↓ : 少し早く落とす<br>スペース : 一気に落とす</p>
+            </div>
+            <div id="game-over-screen" class="overlay hidden">
+                <h1>GAME OVER</h1>
+                <p>SCORE: <span id="final-score">0</span></p>
+                <button id="restart-btn">PLAY AGAIN</button>
+            </div>
+        </div>
+
+        <div class="right-panel panel">
+            <h2>NEXT</h2>
+            <canvas id="next-piece" width="120" height="120"></canvas>
+        </div>
+        </div>
+
+        <!-- スマホ・PC共通 操作ボタン -->
+        <div id="mobile-controls" class="mobile-controls">
+            <button id="btn-left" class="control-btn">◀</button>
+            <button id="btn-down" class="control-btn">▼</button>
+            <button id="btn-right" class="control-btn">▶</button>
+            <button id="btn-rotate" class="control-btn">↻</button>
+            <button id="btn-drop" class="control-btn drop-btn">⏬</button>
+        </div>
+    </div>
+    <script src="script.js?v=2"></script>
+</body>
+</html>
