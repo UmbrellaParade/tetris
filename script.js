@@ -41,6 +41,8 @@ let score = 0;
 let lines = 0;
 let level = 1;
 let gameActive = false;
+let isPaused = false;
+let highScore = localStorage.getItem('tetrisHighScore') || 0;
 let animationId = null;
 
 // キャラクターのセリフ表示用タイマー
@@ -333,13 +335,14 @@ function resetPiece() {
 // スコアなどのUIを更新
 function updateUI() {
     document.getElementById('score').innerText = score;
+    document.getElementById('high-score').innerText = highScore;
     document.getElementById('lines').innerText = lines;
     document.getElementById('level').innerText = level;
 }
 
 // ゲームのメインループ（常に画面を更新し続ける）
 function update(time = 0) {
-    if (!gameActive) return;
+    if (!gameActive || isPaused) return;
 
     const deltaTime = time - lastTime;
     lastTime = time;
@@ -363,7 +366,14 @@ function gameOver() {
     document.getElementById('final-score').innerText = score;
     document.getElementById('game-over-screen').classList.remove('hidden');
     
-    showSpeech("ゲームオーバー！\n次はもっと頑張れよ！", 3000);
+    if (score > highScore && score > 0) {
+        highScore = score;
+        localStorage.setItem('tetrisHighScore', highScore);
+        document.getElementById('high-score').innerText = highScore;
+        showSpeech("新記録だ！！\nお前、やるじゃねえか！", 4000);
+    } else {
+        showSpeech("ゲームオーバー！\n次はもっと頑張れよ！", 3000);
+    }
 }
 
 // ゲームスタート処理
@@ -373,11 +383,13 @@ function startGame() {
     lines = 0;
     level = 1;
     dropInterval = 1000;
+    isPaused = false;
     updateUI();
     nextPieceInfo = null;
     resetPiece();
     document.getElementById('start-screen').classList.add('hidden');
     document.getElementById('game-over-screen').classList.add('hidden');
+    document.getElementById('pause-screen').classList.add('hidden');
     gameActive = true;
     lastTime = performance.now();
     update();
@@ -385,9 +397,34 @@ function startGame() {
     showSpeech("さあ、始めるぜ！", 2000);
 }
 
+// 一時停止／再開の切り替え
+function togglePause() {
+    if (!gameActive) return; // プレイ中のみ有効
+    
+    isPaused = !isPaused;
+    if (isPaused) {
+        cancelAnimationFrame(animationId);
+        document.getElementById('pause-screen').classList.remove('hidden');
+        showSpeech("ちょっと休憩か？", 2000);
+    } else {
+        document.getElementById('pause-screen').classList.add('hidden');
+        lastTime = performance.now();
+        update();
+        showSpeech("再開するぜ！", 2000);
+    }
+}
+
 // キーボード操作の設定
 document.addEventListener('keydown', event => {
     if (!gameActive) return;
+    
+    // Pキーは一時停止中でも受け付ける
+    if (event.keyCode === 80) { // Pキー
+        togglePause();
+        return;
+    }
+    
+    if (isPaused) return; // 一時停止中は他の操作を無効化
     
     switch (event.keyCode) {
         case 37: // 左矢印
@@ -427,6 +464,7 @@ function setupMobileControls() {
         });
     };
 
+    handleControl('btn-pause', () => togglePause());
     handleControl('btn-left', () => pieceMove(-1));
     handleControl('btn-right', () => pieceMove(1));
     handleControl('btn-down', () => pieceDrop());
@@ -440,6 +478,7 @@ setupMobileControls();
 // ボタンのクリックイベント
 document.getElementById('start-btn').addEventListener('click', startGame);
 document.getElementById('restart-btn').addEventListener('click', startGame);
+document.getElementById('resume-btn').addEventListener('click', togglePause);
 
 // 最初の画面描画
 drawBoard();

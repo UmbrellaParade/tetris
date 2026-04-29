@@ -30,6 +30,10 @@
                     <div id="score" class="value">0</div>
                 </div>
                 <div class="stat-box">
+                    <h2>HIGH SCORE</h2>
+                    <div id="high-score" class="value">0</div>
+                </div>
+                <div class="stat-box">
                     <h2>LINES</h2>
                     <div id="lines" class="value">0</div>
                 </div>
@@ -45,12 +49,16 @@
             <div id="start-screen" class="overlay">
                 <h1>地獄のテトリス</h1>
                 <button id="start-btn">START GAME</button>
-                <p>操作方法:<br>← → : 左右移動<br>↑ : 回転<br>↓ : 少し早く落とす<br>スペース : 一気に落とす</p>
+                <p>操作方法:<br>← → : 左右移動<br>↑ : 回転<br>↓ : 少し早く落とす<br>スペース : 一気に落とす<br>Pキー : 一時停止</p>
             </div>
             <div id="game-over-screen" class="overlay hidden">
                 <h1>GAME OVER</h1>
                 <p>SCORE: <span id="final-score">0</span></p>
                 <button id="restart-btn">PLAY AGAIN</button>
+            </div>
+            <div id="pause-screen" class="overlay hidden">
+                <h1>PAUSE</h1>
+                <button id="resume-btn">RESUME</button>
             </div>
         </div>
 
@@ -62,6 +70,7 @@
 
         <!-- スマホ・PC共通 操作ボタン -->
         <div id="mobile-controls" class="mobile-controls">
+            <button id="btn-pause" class="control-btn">⏸</button>
             <button id="btn-left" class="control-btn">◀</button>
             <button id="btn-down" class="control-btn">▼</button>
             <button id="btn-right" class="control-btn">▶</button>
