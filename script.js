@@ -48,6 +48,25 @@ let animationId = null;
 // キャラクターのセリフ表示用タイマー
 let speechTimeout = null;
 
+// BGM関連の変数
+const bgmAudio = document.getElementById('bgm-audio');
+let isBgmEnabled = true;
+
+// BGMの再生
+function startBGM() {
+    if (isBgmEnabled && bgmAudio) {
+        bgmAudio.volume = 0.3; // 音量を少し下げる（0.0〜1.0）
+        bgmAudio.play().catch(e => console.log("ブラウザの制限でBGMが再生されませんでした"));
+    }
+}
+
+// BGMの停止
+function stopBGM() {
+    if (bgmAudio) {
+        bgmAudio.pause();
+    }
+}
+
 function showSpeech(text, duration = 2000) {
     const bubble = document.getElementById('speech-bubble');
     if (!bubble) return;
@@ -362,6 +381,7 @@ function update(time = 0) {
 // ゲームオーバー処理
 function gameOver() {
     gameActive = false;
+    stopBGM();
     cancelAnimationFrame(animationId);
     document.getElementById('final-score').innerText = score;
     document.getElementById('game-over-screen').classList.remove('hidden');
@@ -392,6 +412,7 @@ function startGame() {
     document.getElementById('pause-screen').classList.add('hidden');
     gameActive = true;
     lastTime = performance.now();
+    startBGM();
     update();
     
     showSpeech("さあ、始めるぜ！", 2000);
@@ -403,12 +424,14 @@ function togglePause() {
     
     isPaused = !isPaused;
     if (isPaused) {
+        stopBGM();
         cancelAnimationFrame(animationId);
         document.getElementById('pause-screen').classList.remove('hidden');
         showSpeech("ちょっと休憩か？", 2000);
     } else {
         document.getElementById('pause-screen').classList.add('hidden');
         lastTime = performance.now();
+        startBGM();
         update();
         showSpeech("再開するぜ！", 2000);
     }
@@ -479,6 +502,15 @@ setupMobileControls();
 document.getElementById('start-btn').addEventListener('click', startGame);
 document.getElementById('restart-btn').addEventListener('click', startGame);
 document.getElementById('resume-btn').addEventListener('click', togglePause);
+document.getElementById('btn-bgm').addEventListener('click', (e) => {
+    isBgmEnabled = !isBgmEnabled;
+    e.target.innerText = isBgmEnabled ? "🔊" : "🔈";
+    if (gameActive && !isPaused) {
+        if (isBgmEnabled) startBGM();
+        else stopBGM();
+    }
+    e.target.blur();
+});
 
 // 最初の画面描画
 drawBoard();
