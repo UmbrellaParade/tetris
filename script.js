@@ -504,12 +504,12 @@ document.getElementById('restart-btn').addEventListener('click', startGame);
 document.getElementById('resume-btn').addEventListener('click', togglePause);
 document.getElementById('btn-bgm').addEventListener('click', (e) => {
     isBgmEnabled = !isBgmEnabled;
-    e.target.innerText = isBgmEnabled ? "🔊" : "🔈";
+    e.currentTarget.innerText = isBgmEnabled ? "🔊" : "🔈";
     if (gameActive && !isPaused) {
         if (isBgmEnabled) startBGM();
         else stopBGM();
     }
-    e.target.blur();
+    e.currentTarget.blur();
 });
 
 // 最初の画面描画
