@@ -299,14 +299,9 @@ button:active {
         grid-area: left;
         display: flex;
         flex-direction: row;
-        justify-content: center; /* 中央に寄せる */
-        align-items: center; /* 上下中央 */
-        gap: 15px; /* キャラとSCOREの間の隙間を綺麗に保つ */
-        background: rgba(10, 10, 15, 0.65); /* 1つの大きなパネルにまとめる */
-        border-radius: 10px;
-        border: 1px solid rgba(255, 42, 95, 0.3);
-        box-shadow: inset 0 0 20px rgba(255, 42, 95, 0.1);
-        padding: 5px 15px;
+        justify-content: center;
+        align-items: stretch;
+        gap: 5px; /* パネル間の隙間 */
     }
     
     /* ヴェル13世パネル */
@@ -315,24 +310,18 @@ button:active {
         flex-direction: column;
         align-items: center;
         justify-content: flex-end; 
-        width: auto; /* 余分な幅をなくす */
-        background: transparent; /* 背景を消して左ラッパーと一体化 */
-        border: none;
-        box-shadow: none;
-        padding: 0;
+        flex: 1.5; /* SCOREより大きい比率 */
+        padding: 5px;
     }
     
     /* ステータスパネル */
     .stats-panel {
         display: flex;
         flex-direction: column;
-        align-items: flex-start; /* 左寄せにしてヴェルにくっつける */
-        justify-content: center;
-        width: auto; /* 余分な幅をなくす */
-        background: transparent; /* 背景を消して左ラッパーと一体化 */
-        border: none;
-        box-shadow: none;
-        padding: 0;
+        align-items: center;
+        justify-content: flex-start;
+        flex: 1; /* キャラより小さい比率 */
+        padding: 5px;
     }
     
     /* 右上：NEXT */
