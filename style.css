@@ -128,11 +128,11 @@ h2:first-child {
     transform: translate(-50%, -50%);
     width: 70%;
     height: 70%;
-    background-image: url('character.png');
+    background-image: url('watermark.jpg');
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
-    opacity: 0.08; /* うっすらと透かす */
+    opacity: 0.2; /* 20%の透かし */
     z-index: 1;
     pointer-events: none; /* クリックを貫通させる */
 }
