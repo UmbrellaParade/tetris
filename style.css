@@ -368,7 +368,8 @@ button:active {
     }
     
     #game-character {
-        width: 170px; /* キャラクターを2倍大きく（元85px） */
+        width: 220px; /* さらに大きく（はみ出すくらい特大に） */
+        max-width: none;
     }
     
     /* 中央下：ゲーム画面（自動で縮小される） */
