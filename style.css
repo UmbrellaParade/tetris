@@ -361,16 +361,14 @@ button:active {
     /* キャラクターコンテナ */
     .character-container {
         width: 100%;
-        margin-top: 20px; /* キャラクター全体を少し下に下げる */
-        transform: translateY(45px); /* BGMの文字の位置まで大幅に下げる */
+        margin-top: 0;
         display: flex;
         flex-direction: column;
         align-items: center;
     }
     
     #game-character {
-        width: 220px; /* さらに大きく（はみ出すくらい特大に） */
-        max-width: none;
+        width: 85px; /* キャラクターを元の安全なサイズに戻す */
     }
     
     /* 中央下：ゲーム画面（自動で縮小される） */
