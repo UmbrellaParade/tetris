@@ -48,24 +48,164 @@ let animationId = null;
 // キャラクターのセリフ表示用タイマー
 let speechTimeout = null;
 
-// BGM関連の変数
-const bgmAudio = document.getElementById('bgm-audio');
+// BGMプレイリスト＆キャラクターチェンジシステム
+const playlist = [
+    {
+        bgmId: 'bgm-1',
+        charImage: 'char1.png',
+        charName: 'ヴェル13世',
+        speeches: {
+            start: "さあ、始めるぜ！",
+            single: "よし！その調子！",
+            double: "ダブル！いいぞ！",
+            triple: "トリプル！すげぇ！",
+            tetris: "テトリス！！\nお前、天才か！？",
+            levelUp: "レベルアップ！\nスピードが上がるぜ！",
+            gameOver: "ゲームオーバー！\n次はもっと頑張れよ！",
+            newRecord: "新記録だ！！\nお前、やるじねえか！",
+            pause: "ちょっと休憩か？",
+            resume: "再開するぜ！",
+            songChange: "俺の出番だぜ！"
+        }
+    },
+    {
+        bgmId: 'bgm-2',
+        charImage: 'char2.png',
+        charName: 'カーラ・マンソン',
+        speeches: {
+            start: "ふふ…始めてあげるわ",
+            single: "その程度？もっとできるでしょ",
+            double: "悪くないわね…褒めてあげる",
+            triple: "へえ…やるじゃない",
+            tetris: "すごいじゃない…\nご褒美にあずかるわ",
+            levelUp: "レベルアップ？\nついてこれるかしら？",
+            gameOver: "終わり？…つまらないわね",
+            newRecord: "新記録…\n少しだけ認めてあげる",
+            pause: "休むの？…弱いわね",
+            resume: "戻ってきたのね…いい子",
+            songChange: "私の時間よ…\n覚悟なさい"
+        }
+    },
+    {
+        bgmId: 'bgm-3',
+        charImage: 'char3.png',
+        charName: 'アマモリ',
+        speeches: {
+            start: "…始まるんだね。\n記録しておくよ",
+            single: "…うん、いい感じ",
+            double: "…すごいな。\n書き留めておくね",
+            triple: "トリプル…！\n物語になりそうだ",
+            tetris: "テトリス…！！\nこれは…書かなきゃ",
+            levelUp: "レベルが上がった…\n気をつけてね",
+            gameOver: "終わっちゃった…\nでも、いい物語だった",
+            newRecord: "新記録…！\nこれは特別なページに書くね",
+            pause: "…休憩だね。\n僕も少し書こうかな",
+            resume: "…続き、見せて",
+            songChange: "…僕の番だね。\n静かに見守るよ"
+        }
+    },
+    {
+        bgmId: 'bgm-4',
+        charImage: 'char4.png',
+        charName: 'ヴェル13世',
+        speeches: {
+            start: "覚悟しろ…\n本気の地獄だ！",
+            single: "そんなもんか！",
+            double: "まだまだだ！",
+            triple: "トリプル！\n燃えてきたぜ！！",
+            tetris: "テトリス！！！\nお前が真の王だ！",
+            levelUp: "レベルアップ！\n地獄が深くなるぞ！",
+            gameOver: "終わりだ…\nだが、お前は強かった！",
+            newRecord: "新記録だと！？\n伝説に刻んでやる！",
+            pause: "休むのか？\n…今のうちにな",
+            resume: "行くぞ！全力だ！",
+            songChange: "真の姿を見せてやる！"
+        }
+    },
+    {
+        bgmId: 'bgm-5',
+        charImage: 'char5.png',
+        charName: 'カーラ・マンソン',
+        speeches: {
+            start: "さあ…跪きなさい",
+            single: "それだけ？\n物足りないわ",
+            double: "ふふ…許してあげる",
+            triple: "いいわよ…\nもっと見せなさい",
+            tetris: "素晴らしい…\nご褒美にあずかるわ♥",
+            levelUp: "レベルアップ…\n逮げられるかしら？",
+            gameOver: "終わり？\n…つまらないわね",
+            newRecord: "新記録…\n少しだけ愛してあげる",
+            pause: "逃げるの？\n許さないわよ",
+            resume: "戻ってきたのね…\nいい子",
+            songChange: "私のステージよ…\n賭けてみなさい？"
+        }
+    }
+];
+
+let currentTrack = 0;
 let isBgmEnabled = true;
+
+// 現在のキャラのセリフを取得
+function getCurrentSpeech(key) {
+    return playlist[currentTrack].speeches[key] || "";
+}
+
+// キャラクターを切り替える
+function switchCharacter(trackIndex) {
+    const track = playlist[trackIndex];
+    document.getElementById('game-character').src = track.charImage;
+    document.querySelector('.char-name').innerText = track.charName;
+}
 
 // BGMの再生
 function startBGM() {
-    if (isBgmEnabled && bgmAudio) {
-        bgmAudio.volume = 0.3; // 音量を少し下げる（0.0〜1.0）
-        bgmAudio.play().catch(e => console.log("ブラウザの制限でBGMが再生されませんでした"));
+    if (!isBgmEnabled) return;
+    const audio = document.getElementById(playlist[currentTrack].bgmId);
+    if (audio) {
+        audio.volume = 0.3;
+        audio.play().catch(e => console.log("ブラウザの制限でBGMが再生されませんでした"));
     }
 }
 
 // BGMの停止
 function stopBGM() {
-    if (bgmAudio) {
-        bgmAudio.pause();
+    const audio = document.getElementById(playlist[currentTrack].bgmId);
+    if (audio) {
+        audio.pause();
     }
 }
+
+// 次の曲に切り替える
+function nextTrack() {
+    // 現在の曲を先頭に戻す
+    const currentAudio = document.getElementById(playlist[currentTrack].bgmId);
+    if (currentAudio) {
+        currentAudio.pause();
+        currentAudio.currentTime = 0;
+    }
+    // 次の曲へ
+    currentTrack = (currentTrack + 1) % playlist.length;
+    switchCharacter(currentTrack);
+    if (gameActive && !isPaused && isBgmEnabled) {
+        startBGM();
+        showSpeech(getCurrentSpeech('songChange'), 2500);
+    }
+}
+
+// 全曲の「曲が終わった時」イベントを設定
+function setupPlaylistListeners() {
+    playlist.forEach((track, index) => {
+        const audio = document.getElementById(track.bgmId);
+        if (audio) {
+            audio.addEventListener('ended', () => {
+                if (gameActive && !isPaused) {
+                    nextTrack();
+                }
+            });
+        }
+    });
+}
+setupPlaylistListeners();
 
 function showSpeech(text, duration = 2000) {
     const bubble = document.getElementById('speech-bubble');
@@ -326,16 +466,16 @@ function clearLines() {
 
         // 消したライン数やレベルアップに応じた掛け声
         if (level > oldLevel) {
-            showSpeech("レベルアップ！\nスピードが上がるぜ！", 3000);
+            showSpeech(getCurrentSpeech('levelUp'), 3000);
         } else {
             if (linesCleared === 1) {
-                showSpeech("よし！その調子！", 1500);
+                showSpeech(getCurrentSpeech('single'), 1500);
             } else if (linesCleared === 2) {
-                showSpeech("ダブル！いいぞ！", 1500);
+                showSpeech(getCurrentSpeech('double'), 1500);
             } else if (linesCleared === 3) {
-                showSpeech("トリプル！すげぇ！", 2000);
+                showSpeech(getCurrentSpeech('triple'), 2000);
             } else if (linesCleared === 4) {
-                showSpeech("テトリス！！\nお前、天才か！？", 2500);
+                showSpeech(getCurrentSpeech('tetris'), 2500);
             }
         }
     }
@@ -410,12 +550,20 @@ function startGame() {
     document.getElementById('start-screen').classList.add('hidden');
     document.getElementById('game-over-screen').classList.add('hidden');
     document.getElementById('pause-screen').classList.add('hidden');
+    // プレイリストを先頭にリセット
+    playlist.forEach(track => {
+        const audio = document.getElementById(track.bgmId);
+        if (audio) { audio.pause(); audio.currentTime = 0; }
+    });
+    currentTrack = 0;
+    switchCharacter(0);
+    
     gameActive = true;
     lastTime = performance.now();
     startBGM();
     update();
     
-    showSpeech("さあ、始めるぜ！", 2000);
+    showSpeech(getCurrentSpeech('start'), 2000);
 }
 
 // 一時停止／再開の切り替え
@@ -427,13 +575,13 @@ function togglePause() {
         stopBGM();
         cancelAnimationFrame(animationId);
         document.getElementById('pause-screen').classList.remove('hidden');
-        showSpeech("ちょっと休憩か？", 2000);
+        showSpeech(getCurrentSpeech('pause'), 2000);
     } else {
         document.getElementById('pause-screen').classList.add('hidden');
         lastTime = performance.now();
         startBGM();
         update();
-        showSpeech("再開するぜ！", 2000);
+        showSpeech(getCurrentSpeech('resume'), 2000);
     }
 }
 

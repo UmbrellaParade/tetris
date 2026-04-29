@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>地獄のテトリス</title>
-    <link rel="stylesheet" href="style.css?v=28">
+    <link rel="stylesheet" href="style.css?v=29">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -45,7 +45,11 @@
         </div>
 
         <div class="center-panel">
-            <audio id="bgm-audio" src="bgm.mp3" loop></audio>
+            <audio id="bgm-1" src="bgm1.mp3"></audio>
+            <audio id="bgm-2" src="bgm2.mp3"></audio>
+            <audio id="bgm-3" src="bgm3.mp3"></audio>
+            <audio id="bgm-4" src="bgm4.mp3"></audio>
+            <audio id="bgm-5" src="bgm5.mp3"></audio>
             <canvas id="game-board" width="300" height="600"></canvas>
             <div id="start-screen" class="overlay">
                 <h1>地獄のテトリス</h1>
@@ -84,6 +88,6 @@
             <button id="btn-drop" class="control-btn drop-btn">⏬</button>
         </div>
     </div>
-    <script src="script.js?v=3"></script>
+    <script src="script.js?v=4"></script>
 </body>
 </html>
