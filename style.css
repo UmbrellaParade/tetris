@@ -342,6 +342,8 @@ button:active {
         flex-direction: column;
         align-items: center;
         justify-content: flex-start;
+        width: auto; /* パソコン版の160px幅を解除し、最小限に縮小 */
+        min-width: 60px;
     }
     
     .char-name {
