@@ -623,22 +623,58 @@ document.addEventListener('keydown', event => {
 
 // スマホ用ボタンのクリック／タップイベント
 function setupMobileControls() {
+    // 1回だけ動作するボタン
     const handleControl = (id, action) => {
         const btn = document.getElementById(id);
         if(!btn) return;
-        
-        // clickはスマホでもPCでも確実に動作します
         btn.addEventListener('click', (e) => {
             if (gameActive) action();
-            // スペースキーなどとの干渉を防ぐためフォーカスを外す
             btn.blur();
         });
     };
 
+    // 長押しで連続動作するボタン
+    const handleRepeat = (id, action) => {
+        const btn = document.getElementById(id);
+        if (!btn) return;
+
+        let holdTimer = null;
+        let repeatTimer = null;
+
+        const start = (e) => {
+            e.preventDefault();
+            if (!gameActive || isPaused) return;
+            action(); // 最初の1回はすぐ動かす
+            holdTimer = setTimeout(() => {
+                repeatTimer = setInterval(() => {
+                    if (!gameActive || isPaused) {
+                        stop();
+                        return;
+                    }
+                    action();
+                }, 60);
+            }, 200); // 200ms長押しで連続開始
+        };
+
+        const stop = () => {
+            clearTimeout(holdTimer);
+            clearInterval(repeatTimer);
+            holdTimer = null;
+            repeatTimer = null;
+        };
+
+        btn.addEventListener('mousedown', start);
+        btn.addEventListener('touchstart', start, { passive: false });
+        btn.addEventListener('mouseup', stop);
+        btn.addEventListener('mouseleave', stop);
+        btn.addEventListener('touchend', stop);
+        btn.addEventListener('touchcancel', stop);
+    };
+
     handleControl('btn-pause', () => togglePause());
-    handleControl('btn-left', () => pieceMove(-1));
-    handleControl('btn-right', () => pieceMove(1));
-    handleControl('btn-down', () => pieceDrop());
+    handleRepeat('btn-left', () => pieceMove(-1));
+    handleRepeat('btn-right', () => pieceMove(1));
+    handleRepeat('btn-down', () => pieceDrop());
     handleControl('btn-rotate', () => pieceRotate(1));
     handleControl('btn-drop', () => hardDrop());
 }
